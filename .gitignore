@@ -1,0 +1,45 @@
+# ==========================================
+# NexusAI Master .gitignore (GitHub Secret Guard)
+# ==========================================
+
+# CRITICAL: Prevent secrets and environment files from being tracked
+.env
+.env.*
+*.env
+.env.local
+.env.production
+.env.development
+
+# Python byte code and virtualenvs
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+env/
+ENV/
+
+# Data and SQLite databases
+data/*.db
+data/*.sqlite
+data/*.json
+data/uploads/*
+!data/uploads/.gitkeep
+
+# System and editor caches
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Server execution logs
+*.log
+server_output.log
+
+# Temporary ZIP archives
+*.zip
+*.tar.gz
