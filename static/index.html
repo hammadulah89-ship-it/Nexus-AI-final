@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <title>NexusAI Studio — 13-Pillar Autonomous AI Operating System</title>
+  <link rel="stylesheet" href="/static/styles.css?v=6.0.0" />
+  <!-- Google Identity Services (Official Google Sign-In SDK) -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body class="theme-obsidian">
+
+  <!-- MAIN APP WRAPPER -->
+  <div class="nexus-app">
+    
+    <!-- TOP GLOBAL HEADER -->
+    <header class="top-bar">
+      <div class="top-bar-left">
+        <button id="btn-toggle-sidebar" class="btn-icon-bar" title="Toggle Past Chats History Sidebar">
+          <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <rect x="3" y="3" width="18" height="18" rx="2" stroke-width="2"/>
+            <path d="M9 3v18" stroke-width="2"/>
+          </svg>
+        </button>
+
+        <div class="brand">
+          <div class="brand-spark">✦</div>
+          <div class="brand-info">
+            <div class="brand-name">NexusAI <span class="os-badge">OS 6.0</span></div>
+            <div class="brand-sub">Nexus Technologies Limited · 13-Pillar Master System</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="top-bar-right">
+        <!-- User Profile / Real Google Sign-In Button -->
+        <button id="btn-user-auth" class="btn-user-pill" title="Google Account Sign-In">
+          <span class="user-avatar" id="header-user-avatar">👤</span>
+          <span id="header-user-name">Sign In</span>
+        </button>
+
+        <!-- CEO VIP Badge / Access Button -->
+        <button id="btn-ceo-access" class="btn-ceo-access" title="CEO Executive Authentication">
+          <span class="crown-icon">👑</span>
+          <span id="ceo-status-label">CEO Access</span>
+        </button>
+
+        <!-- Model Selector Dropdown -->
+        <div class="model-select-wrapper">
+          <select id="select-model" class="model-select" title="NexusAI Multi-Model Engine (Pillar 9)">
+            <option value="auto" selected>🧠 NexusAI Auto Router (Intelligent)</option>
+            <option value="openai/gpt-oss-120b">✦ NexusAI Ultra Core (Deep Logic)</option>
+            <option value="qwen/qwen3.6-27b">⚡ NexusAI Vision & Code Core (Multimodal)</option>
+            <option value="groq/compound">⚡ NexusAI Turbo Core (Instant Speed)</option>
+          </select>
+        </div>
+
+        <button id="btn-toggle-research" class="btn-pill-mode" title="Toggle Deep Multi-Hop Research Mode">
+          <span class="mode-icon">🔎</span>
+          <span>Deep Research</span>
+        </button>
+
+        <button id="btn-toggle-canvas" class="btn-pill-canvas" title="Toggle Interactive Workspace Canvas">
+          <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <rect x="3" y="3" width="18" height="18" rx="2" stroke-width="2"/>
+            <path d="M15 3v18" stroke-width="2"/>
+          </svg>
+          <span>Workspace</span>
+          <span class="canvas-counter" id="canvas-counter">0</span>
+        </button>
+
+        <button id="btn-new-chat" class="btn-pill-action" title="Start a fresh conversation thread">
+          <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+          </svg>
+          <span>New Chat</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- REAL GOOGLE SIGN-IN MODAL -->
+    <div id="auth-modal" class="modal-overlay hidden">
+      <div class="modal-card auth-card">
+        <div class="modal-header">
+          <div style="display:flex;align-items:center;gap:0.625rem;">
+            <div class="auth-spark">✦</div>
+            <div>
+              <h3 style="font-size:1rem;font-weight:800;color:#fff;">Sign In to NexusAI</h3>
+              <p style="font-size:0.6875rem;color:#94a3b8;">Nexus Technologies Limited · Official Google Authentication</p>
+            </div>
+          </div>
+          <button id="btn-close-auth-modal" class="btn-close-modal">✕</button>
+        </div>
+
+        <!-- Real Google OAuth Container -->
+        <div class="google-auth-box">
+          <div style="font-size:0.75rem;color:#cbd5e1;line-height:1.45;margin-bottom:0.5rem;">
+            Sign in with your Google account to save your private conversations, multimodal analysis, and long-term memory permanently.
+          </div>
+          
+          <div id="g_id_signin_box" style="display:flex;justify-content:center;margin:0.5rem 0;"></div>
+          
+          <div id="google-config-hint" class="google-config-hint hidden">
+            <span>💡 To enable Google OAuth popup, add your <code>GOOGLE_CLIENT_ID</code> in <code>config.py</code>.</span>
+          </div>
+        </div>
+
+        <div class="modal-actions" style="margin-top:0.75rem;">
+          <button type="button" id="btn-guest-mode" class="btn-joking" style="width:100%;">Continue as Guest</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CEO AUTHENTICATION & SECURITY LOCKOUT MODAL -->
+    <div id="ceo-modal" class="modal-overlay hidden">
+      <div class="modal-card">
+        <div class="modal-header">
+          <div style="display:flex;align-items:center;gap:0.5rem;">
+            <span style="font-size:1.35rem;">👑</span>
+            <div>
+              <h3 style="font-size:0.9375rem;font-weight:800;color:#fff;" id="modal-heading">Executive Security Protocol</h3>
+              <p style="font-size:0.6875rem;color:#94a3b8;">Nexus Technologies Limited · Founder & CEO Verification</p>
+            </div>
+          </div>
+          <button id="btn-close-ceo-modal" class="btn-close-modal">✕</button>
+        </div>
+
+        <form id="ceo-auth-form" class="modal-body">
+          <div style="font-size:0.75rem;color:#cbd5e1;line-height:1.45;" id="modal-desc">
+            You have claimed the identity of Founder & CEO <strong>Mr. Hammadullah Khalid</strong>. Please enter the executive passcode to authenticate.
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:0.35rem;margin-top:0.35rem;">
+            <label style="font-size:0.6875rem;font-weight:700;color:#e5b869;text-transform:uppercase;">CEO Executive Passcode:</label>
+            <input type="password" id="ceo-passcode-input" class="ceo-input font-mono" placeholder="Enter executive passcode..." required />
+          </div>
+
+          <div id="ceo-auth-msg" class="auth-msg hidden"></div>
+
+          <div class="modal-actions">
+            <button type="button" id="btn-joking" class="btn-joking hidden">I was joking / Continue as Standard User</button>
+            <button type="button" id="btn-cancel-ceo" class="btn-cancel">Cancel</button>
+            <button type="submit" class="btn-authenticate">Authenticate Identity</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- MAIN BODY CONTAINER -->
+    <div class="workspace-body">
+      
+      <!-- LEFT PAST CHATS SIDEBAR (Collapsible) -->
+      <aside class="history-sidebar" id="history-sidebar">
+        <div class="history-top">
+          <button id="btn-sidebar-new" class="btn-sidebar-new">
+            <svg class="icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+            </svg>
+            <span>+ New Thread</span>
+          </button>
+        </div>
+
+        <div class="history-section-header">
+          <span class="history-heading-text">Your Private Conversations</span>
+        </div>
+
+        <div id="past-sessions-list" class="past-sessions-list custom-scrollbar">
+          <div class="empty-sessions-hint">No past conversations</div>
+        </div>
+
+        <div class="history-footer">
+          <div class="system-status-badge">
+            <span class="pulse-emerald"></span>
+            <span class="status-model-name">NexusAI OS Active</span>
+          </div>
+        </div>
+      </aside>
+
+      <!-- CHAT VIEWPORT (PRIMARY) -->
+      <section class="chat-viewport" id="chat-viewport">
+        
+        <!-- Messages Scrollable Feed -->
+        <div class="chat-feed custom-scrollbar" id="chat-feed">
+          
+          <!-- Welcome Screen (Visible on Start) -->
+          <div class="welcome-hero" id="welcome-hero">
+            <div class="hero-sparkle">✦</div>
+            <h1 class="hero-title">The 13-Pillar Autonomous AI.</h1>
+            <p class="hero-subtitle">NexusAI is developed by Nexus Technologies Limited (CEO: Mr. Hammadullah Khalid). It autonomously writes Python code, inspects multimodal images, computes exact math, crawls the live web, compiles deep research dossiers, and queries uploaded documents.</p>
+
+            <!-- Quick Capability Starter Cards -->
+            <div class="starter-grid">
+              <button class="starter-card" data-prompt="Who created you and who is your CEO?">
+                <div class="starter-top">
+                  <span class="starter-icon">🏛️</span>
+                  <span class="starter-tag">Leadership Identity</span>
+                </div>
+                <div class="starter-text">Who made you and who is your Founder & CEO?</div>
+              </button>
+
+              <button class="starter-card" data-prompt="Plot a damped harmonic sine wave in Python and calculate its peak amplitudes.">
+                <div class="starter-top">
+                  <span class="starter-icon">📊</span>
+                  <span class="starter-tag">Python Sandbox</span>
+                </div>
+                <div class="starter-text">Plot a damped harmonic sine wave with Matplotlib</div>
+              </button>
+
+              <button class="starter-card" data-prompt="Deep research on the state of Humanoid Robotics in 2026: hardware architectures, battery power, actuators, key players, and market forecasts.">
+                <div class="starter-top">
+                  <span class="starter-icon">🔎</span>
+                  <span class="starter-tag">Deep Research</span>
+                </div>
+                <div class="starter-text">Deep research: Humanoid Robotics 2026 dossier</div>
+              </button>
+
+              <button class="starter-card" data-prompt="Draw an architecture flowchart of OAuth 2.0 authentication workflow step-by-step.">
+                <div class="starter-top">
+                  <span class="starter-icon">🎨</span>
+                  <span class="starter-tag">Diagram Engine</span>
+                </div>
+                <div class="starter-text">Generate interactive OAuth 2.0 architecture flowchart</div>
+              </button>
+            </div>
+          </div>
+
+          <!-- Dynamic Chat Message Thread -->
+          <div class="thread-messages" id="thread-messages"></div>
+
+        </div>
+
+        <!-- FIXED BOTTOM INPUT BOX -->
+        <div class="input-panel">
+          
+          <!-- Attachment Chip -->
+          <div id="attachment-chip" class="attachment-chip hidden">
+            <span class="attach-icon" id="attachment-icon">📄</span>
+            <span id="attachment-name" class="attach-name">filename.pdf</span>
+            <button type="button" id="btn-remove-attachment" class="btn-remove-attach" title="Remove attachment">✕</button>
+          </div>
+
+          <form id="chat-form" class="chat-form-box">
+            <input type="file" id="file-input" class="hidden" accept=".pdf,.docx,.csv,.xlsx,.xls,.txt,.json,.md,.png,.jpg,.jpeg,.webp" />
+            
+            <button type="button" id="btn-upload-file" class="btn-action-icon" title="Attach Document (PDF, CSV, Excel, Word) or Image">
+              <svg class="icon-md" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/>
+              </svg>
+            </button>
+
+            <textarea 
+              id="message-input" 
+              rows="1" 
+              class="message-textarea" 
+              placeholder="Ask anything, upload images/PDFs, run Python code, plot charts, search live web..."
+              required
+            ></textarea>
+
+            <button type="button" id="btn-voice-input" class="btn-action-icon" title="Voice Input (Speech-to-Text)">
+              <svg class="icon-md" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 003-3V5a3 3 0 00-6 0v6a3 3 0 003 3z"/>
+              </svg>
+            </button>
+
+            <button type="submit" id="btn-send-message" class="btn-send" title="Send (Enter)">
+              <svg class="icon-send" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </button>
+          </form>
+
+          <div class="input-footer-caption">
+            <span>NexusAI · Nexus Technologies Limited (CEO: Mr. Hammadullah Khalid) · 13-Pillar Autonomous Engine.</span>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- RIGHT SLIDE-OUT / SPLIT WORKSPACE CANVAS -->
+      <aside class="workspace-canvas closed" id="workspace-canvas">
+        
+        <!-- Canvas Header Bar -->
+        <div class="canvas-header">
+          <div class="canvas-tab-bar custom-scrollbar">
+            <button class="canvas-nav-btn active" data-tab="view-artifacts">
+              <span>📊 Visuals</span>
+              <span class="tab-badge" id="tab-badge-plots">0</span>
+            </button>
+            <button class="canvas-nav-btn" data-tab="view-dossier">
+              <span>📑 Dossier</span>
+            </button>
+            <button class="canvas-nav-btn" data-tab="view-rag">
+              <span>📄 Documents</span>
+              <span class="tab-badge" id="tab-badge-files">0</span>
+            </button>
+            <button class="canvas-nav-btn" data-tab="view-sandbox">
+              <span>💻 Sandbox</span>
+            </button>
+            <button class="canvas-nav-btn" data-tab="view-memory">
+              <span>🗂️ Memory</span>
+              <span class="tab-badge" id="tab-badge-memory">0</span>
+            </button>
+            <button class="canvas-nav-btn" data-tab="view-users" id="tab-btn-users">
+              <span>👥 Users CRM</span>
+            </button>
+          </div>
+
+          <button id="btn-close-canvas" class="btn-close-canvas" title="Close Workspace">✕</button>
+        </div>
+
+        <!-- Canvas Body Views -->
+        <div class="canvas-body custom-scrollbar">
+          
+          <!-- TAB 1: VISUAL PLOTS & DIAGRAMS -->
+          <div class="canvas-view-content active" id="view-artifacts">
+            <div class="pane-headline">
+              <div class="pane-title">Generated Visual Plots & Diagrams</div>
+              <div class="pane-subtitle">Matplotlib figures and visual artifacts.</div>
+            </div>
+            <div id="plots-gallery" class="plots-gallery">
+              <div class="canvas-empty-state">
+                <div class="empty-emoji">📊</div>
+                <div class="empty-headline">No visual artifacts generated yet</div>
+                <div class="empty-details">Ask NexusAI to plot a graph, simulate data, or upload an image to view visuals here!</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 2: DEEP RESEARCH DOSSIER -->
+          <div class="canvas-view-content" id="view-dossier">
+            <div class="pane-headline">
+              <div class="pane-title">Executive Research Dossier</div>
+              <div class="pane-subtitle">Multi-hop investigation compiled across 10–15+ verified web sources.</div>
+            </div>
+            <div id="dossier-content-area" class="dossier-area">
+              <div class="canvas-empty-state">
+                <div class="empty-emoji">📑</div>
+                <div class="empty-headline">No Active Research Dossier</div>
+                <div class="empty-details">Click "🔎 Deep Research" or ask "Deep research on [Topic]" to compile a multi-source intelligence report.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 3: DOCUMENT INGESTION & HYBRID RAG -->
+          <div class="canvas-view-content" id="view-rag">
+            <div class="pane-headline">
+              <div class="pane-title">Universal Document Processor & RAG Index</div>
+              <div class="pane-subtitle">Upload PDFs, CSVs, Excel, Word docs, and query them with semantic search.</div>
+            </div>
+
+            <div class="upload-dropzone" id="upload-dropzone">
+              <div class="dropzone-icon">📎</div>
+              <div class="dropzone-text">Click to upload or drag & drop files here</div>
+              <div class="dropzone-types">Supports .PDF, .CSV, .XLSX, .DOCX, .TXT, .JSON, .PNG, .JPG</div>
+            </div>
+
+            <div id="uploaded-docs-list" class="uploaded-docs-list"></div>
+          </div>
+
+          <!-- TAB 4: LIVE PYTHON REPL SANDBOX -->
+          <div class="canvas-view-content" id="view-sandbox">
+            <div class="pane-headline">
+              <div class="pane-title">Live Python REPL Sandbox</div>
+              <div class="pane-subtitle">Interactive Python runtime (numpy, pandas, matplotlib, scipy, sympy).</div>
+            </div>
+
+            <div class="sandbox-container">
+              <div class="sandbox-toolbar">
+                <span class="lang-tag">Python 3.13 Runtime</span>
+                <button type="button" id="btn-run-sandbox" class="btn-run-code">▶ Run Code</button>
+              </div>
+
+              <textarea id="sandbox-editor" rows="9" class="sandbox-editor" spellcheck="false">import numpy as np
+import matplotlib.pyplot as plt
+
+# Generate harmonic wave
+x = np.linspace(0, 10, 150)
+y = np.sin(x) * np.exp(-x / 4)
+
+plt.figure(figsize=(7, 4))
+plt.plot(x, y, color='#38bdf8', linewidth=2.5, label='Damped Wave')
+plt.title('Harmonic Wave Simulation', color='#f1f5f9', fontsize=12, fontweight='bold')
+plt.grid(True, linestyle='--', alpha=0.25)
+plt.legend(facecolor='#1e293b', labelcolor='white')
+plt.tick_params(colors='#94a3b8')
+
+print("Peak Amplitude:", np.max(y))
+print("Trough Amplitude:", np.min(y))
+</textarea>
+
+              <div class="console-box">
+                <div class="console-label">Console Output:</div>
+                <pre id="console-output" class="console-pre">Click "Run Code" to execute script...</pre>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB 5: LONG-TERM MEMORY VAULT -->
+          <div class="canvas-view-content" id="view-memory">
+            <div class="pane-headline">
+              <div class="pane-title">Persistent Long-Term Memory Vault</div>
+              <div class="pane-subtitle">Your private user facts, preferences, and project context.</div>
+            </div>
+
+            <form id="memory-add-form" class="memory-form">
+              <div class="form-grid">
+                <input type="text" id="mem-key-input" class="mem-input" placeholder="Key (e.g. user_name, project_goal)" required />
+                <input type="text" id="mem-cat-input" class="mem-input" placeholder="Category (e.g. profile, preferences)" />
+              </div>
+              <textarea id="mem-val-input" rows="2" class="mem-input" placeholder="Memory Value..." required></textarea>
+              <button type="submit" class="btn-save-mem">+ Store Memory</button>
+            </form>
+
+            <div id="memory-cards-container" class="memory-cards-container"></div>
+          </div>
+
+          <!-- TAB 6: REGISTERED USERS DIRECTORY (CEO CRM) -->
+          <div class="canvas-view-content" id="view-users">
+            <div class="pane-headline">
+              <div class="pane-title">👥 User Roster & Directory (Stored on your Computer)</div>
+              <div class="pane-subtitle">Inspect all visitors and registered accounts saved in your local SQLite database.</div>
+            </div>
+            <div id="users-directory-table" class="users-directory-table"></div>
+          </div>
+
+        </div>
+
+      </aside>
+
+    </div>
+
+  </div>
+
+  <script src="/static/app.js?v=6.0.0"></script>
+</body>
+</html>
